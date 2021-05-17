@@ -1,9 +1,9 @@
 <?php
 
-$server = 'localhost';
-$dbname = 'kekecoder';
-$user = 'root';
-$pass = 'jerusalem';
+$server = 'remotemysql.com';
+$dbname = '6V3DUWFCoy';
+$user = '6V3DUWFCoy';
+$pass = 'G4ZOUl2GLh';
 
 try {
   $conn = new PDO("mysql:host=$server;dbname=$dbname", $user, $pass);
