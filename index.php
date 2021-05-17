@@ -37,7 +37,7 @@ if(empty($errorMsg)){
   $sql->bindValue(':created', date('Y-m-d H:i:s'));
   $sql->execute();
   
-  header('Location: view.php');
+  echo('<div class="alert alert-success">Submitted Successful</div>');
 }
 }
 
