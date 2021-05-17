@@ -1,8 +1,36 @@
 <?php 
 
+define('ERROR', "CANNOT BE LEFT BLANK")
+$errorMsg = [];
+
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-  echo("hello kekecoder");
+$firtname = htmlspecialchars(stripcslashes($_POST['firstname']));
+$lastname = htmlspecialchars(stripcslashes($_POST['lastname']));
+$address = htmlspecialchars(stripcslashes($_POST['address']));
+$email = htmlspecialchars(stripcslashes($_POST['email']));
+# VALIDATION
+if (!$firtname) {
+  $errorMsg['firstname'] = ERROR;
 }
+
+if(!$lastname){
+  $errorMsg['lastname'] = ERROR;
+}
+
+if (!$address) {
+  $errorMsg['address'] = ERROR;
+}
+
+if (!$email) {
+  $errorMsg['email'] = ERROR;
+} elseif (filter_var($email, FILTER_VALIDATE_EMAI)) {
+  $errorMsg['email'] = 'Invalid Email Address';
+}
+if(empty($errorMsg)){
+  
+}
+}
+
 
 ?>
 
