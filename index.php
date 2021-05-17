@@ -1,6 +1,7 @@
 <?php 
+require_once('dbconfig.php');
 
-define('ERROR', "CANNOT BE LEFT BLANK")
+define('ERROR', "CANNOT BE LEFT BLANK");
 $errorMsg = [];
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -13,7 +14,7 @@ if (!$firtname) {
   $errorMsg['firstname'] = ERROR;
 }
 
-if(!$lastname){
+if (!$lastname){
   $errorMsg['lastname'] = ERROR;
 }
 
@@ -23,61 +24,50 @@ if (!$address) {
 
 if (!$email) {
   $errorMsg['email'] = ERROR;
-} elseif (filter_var($email, FILTER_VALIDATE_EMAI)) {
+} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
   $errorMsg['email'] = 'Invalid Email Address';
 }
 if(empty($errorMsg)){
+  //inserting into database
+  $sql = $conn->prepare("INSERT INTO employees(firstname, lastname, address, email, created) VALUES(:firstname, :lastname, :address, :email, :created)");
+  $sql->bindValue(':firstname', $firtname);
+  $sql->bindValue(':lastname', $lastname);
+  $sql->bindValue(':address', $address);
+  $sql->bindValue(':email', $email);
+  $sql->bindValue(':created', date('Y-m-d H:i:s'));
+  $sql->execute();
   
+  header('Location: view.php');
 }
 }
 
 
 ?>
-
-<!doctype html>
-<html>
-  <head>
-    <link rel="stylesheet" href="bootstrap.css">
-    <link rel="stylesheet" href="crudapp.css">
+<?php require_once('header.php'); ?>
     <title>crud app</title>
   </head>
   <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+    <?php require_once('nav.php'); ?>
   <div class="container-body">
     <div class="container">
-      <form method="post">
+      <form method="post" action="<?php echo ($_SERVER['PHP_SELF']) ?>" novalidate>
         <div class="row">
           <div class="col">
             <div class="form-group">
               <label>First Name</label>
-              <input type="text" name="firstname" class="form-control" placeholder="First Name">
+              <input type="text" name="firstname" class="form-control <?php echo isset($errorMsg['firstname']) ? 'is-invalid' : '' ?>" placeholder="First Name">
+              <small class="invalid-feedback">
+                <?php echo $errorMsg['firstname'] ?? '' ?>
+              </small>
             </div>
           </div>
           <div class="col">
             <div class="form-group">
               <label>Last Name</label>
-              <input type="text" name="lastnsme" class="form-control" placeholder="Last Name">
+              <input type="text" name="lastname" class="form-control <?php echo isset($errorMsg['lastnsme']) ? 'is-invalid' : ''?>" placeholder="Last Name">
+              <small class="invalid-feedback">
+                <?php echo $errorMsg['lastname'] ?? '' ?>
+              </small>
             </div>
           </div>
         </div>
@@ -85,13 +75,19 @@ if(empty($errorMsg)){
           <div class="col">
             <div class="form-group">
               <label>Address</label>
-              <input type="text" name="address" class="form-control" placeholder="Enter Your House Address">
+              <input type="text" name="address" class="form-control <?php  echo isset($errorMsg['address']) ? 'is-invalid' : ''?>" placeholder="Enter Your House Address">
+              <small class="invalid-feedback">
+                <?php echo $errorMsg['address'] ?? '' ?>
+              </small>
             </div>
           </div>
           <div class="col">
             <div class="form-group">
               <label>Email</label>
-              <input type="email" name="emaik" class="form-control" placeholder="Email Address">
+              <input type="email" name="email" class="form-control <?php  echo isset($errorMsg['email']) ? 'is-invalid' : ''?>" placeholder="Email Address">
+              <small class="invalid-feedback">
+                <?php echo $errorMsg['email'] ?? '' ?>
+              </small>
             </div>
           </div>
         </div>
