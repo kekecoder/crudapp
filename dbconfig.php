@@ -9,5 +9,6 @@ try {
   $conn = new PDO("mysql:host=$server;dbname=$dbname", $user, $pass);
  # echo('connected successfully.');
 } catch (PDOException $e ) {
-  die('could not connect to database: '.$e->getMessage());
+  //die('could not connect to database: '.$e->getMessage());
+echo "Sorry for the interruption, will be back shortly";
 }
